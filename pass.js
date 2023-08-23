@@ -61,7 +61,7 @@ function getTimes(time, direction) {
 			outQueue.push(item)
 		}
 	}
-	
+
 	let current = 0;
 	let status = 1;
 	while (inQueue.length !== 0 && outQueue.length !== 0) { 
@@ -70,10 +70,16 @@ function getTimes(time, direction) {
 
 		if (current < inFirst.time && current < outFirst.time) {
 			current = Math.min(inFirst.time, outFirst.time)
+			status = 1
+		}
+		if (outFirst.time < inFirst.time && current < inFirst.time) {
 			result[outFirst.index] = current
 			outQueue.shift()
 			status = 1
-			current++
+		} else if (outFirst.time > inFirst.time && current < outFirst.time) {
+			result[inFirst.index] = current
+			inQueue.shift()
+			status = 0
 		} else { 
 			if (status === 1) { 
 				result[outFirst.index] = current
@@ -84,8 +90,8 @@ function getTimes(time, direction) {
 				inQueue.shift()
 				status = 0
 			}
-			current++
 		}
+		current++
 	}
 
 	if (inQueue.length !== 0) { 
